@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -28,7 +27,7 @@ function PathCard({
   return (
     <Card
       tabIndex={0}
-      className="flx-row flex overflow-hidden hover:border-foreground focus:border-foreground md:flex-col"
+      className="flex overflow-hidden hover:border-foreground focus:border-foreground md:flex-col"
     >
       <CardHeader className="flex-1 p-0">
         <div className="relative aspect-video h-full w-full">
@@ -85,7 +84,7 @@ export default function Home() {
                 Paths
               </h1>
             </header>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 pb-16 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {paths.map((p) => (
                 <PathCard
                   key={p.id}
