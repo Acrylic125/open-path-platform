@@ -33,11 +33,11 @@ import {
 } from "../ui/sheet";
 // import { Icons } from "../ui/icons";
 
-export function MainNavbar({ className }: { className: string }) {
+export function MainNavbar({ className }: { className?: string }) {
   return (
     <NavigationMenu
       className={cn(
-        "w-full max-w-full border-b-2 px-4 py-3 md:px-10",
+        "w-full max-w-full border-b-2 bg-background px-4 py-3 md:px-10",
         className,
       )}
     >
