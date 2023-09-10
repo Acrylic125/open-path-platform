@@ -79,13 +79,13 @@ export default function Home() {
       <main className="relative h-screen overflow-auto">
         <MainNavbar className="sticky top-0 z-50" />
         <div className="flex w-full flex-col items-center">
-          <section className="flex w-full max-w-7xl flex-col px-4 py-4 md:px-8 md:py-8">
+          <section className="flex w-full max-w-7xl flex-col gap-3 px-4 py-4 md:gap-6 md:px-8 md:py-8">
             <header className="w-full">
-              <h1 className="scroll-m-19 text-3xl font-bold first:mt-0">
+              <h1 className="scroll-m-19 m:text-3xl text-2xl font-bold first:mt-0">
                 Paths
               </h1>
             </header>
-            <div className="grid grid-cols-1 gap-3 py-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {paths.map((p) => (
                 <PathCard
                   key={p.id}
@@ -98,8 +98,8 @@ export default function Home() {
             </div>
           </section>
         </div>
-        <div className="fixed bottom-4 right-4 z-50 flex w-fit shadow-xl">
-          <Button>New Path</Button>
+        <div className="fixed bottom-6 right-6 z-50 flex w-fit shadow-2xl md:hidden">
+          <Button size="lg">New Path</Button>
         </div>
       </main>
     </>
