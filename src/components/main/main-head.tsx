@@ -11,7 +11,7 @@ export function MainHead({ title: _title }: { title?: string }) {
       <meta name="description" content="Make paths navigable for all." />
       <meta name="keywords" content="opp, open, path, navigate" />
       <meta name="robots" content="index, follow" />
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       <meta name="language" content="English" />
       <meta name="revisit-after" content="7 days" />
       <meta property="og:title" content={title} />
