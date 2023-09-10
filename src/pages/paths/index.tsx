@@ -26,9 +26,12 @@ function PathCard({
   subLocation: string[];
 }) {
   return (
-    <Card className="flx-row flex overflow-hidden md:flex-col">
+    <Card
+      tabIndex={0}
+      className="flx-row flex overflow-hidden hover:border-foreground focus:border-foreground md:flex-col"
+    >
       <CardHeader className="flex-1 p-0">
-        <div className="relative aspect-video w-full">
+        <div className="relative aspect-video h-full w-full">
           <Image
             src="https://images.unsplash.com/photo-1682685797660-3d847763208e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
             alt="Image"
@@ -37,8 +40,10 @@ function PathCard({
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-2 p-4">
-        <CardTitle>{location}</CardTitle>
-        <CardDescription>{subLocation.join(", ")}</CardDescription>
+        <CardTitle className="text-base md:text-lg">{location}</CardTitle>
+        <CardDescription className="text-sm md:text-base">
+          {subLocation.join(", ")}
+        </CardDescription>
       </CardContent>
       {/* <CardFooter className="border-t-2 p-4">
                   <p>View</p>
@@ -74,7 +79,7 @@ export default function Home() {
       <main className="relative h-screen overflow-auto">
         <MainNavbar className="sticky top-0 z-50" />
         <div className="flex w-full flex-col items-center">
-          <section className="flex w-full max-w-7xl flex-col px-8 py-8">
+          <section className="flex w-full max-w-7xl flex-col px-4 py-4 md:px-8 md:py-8">
             <header className="w-full">
               <h1 className="scroll-m-19 text-3xl font-bold first:mt-0">
                 Paths
@@ -92,6 +97,9 @@ export default function Home() {
               ))}
             </div>
           </section>
+        </div>
+        <div className="fixed bottom-4 right-4 z-50 flex w-fit shadow-xl">
+          <Button>New Path</Button>
         </div>
       </main>
     </>
