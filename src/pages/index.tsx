@@ -12,7 +12,8 @@ export default function Home() {
     <>
       <MainHead />
 
-      <main className="relative h-screen">
+      {/* https://stackoverflow.com/questions/46655386/when-css-position-sticky-stops-sticking */}
+      <main className="relative h-screen overflow-auto">
         <MainNavbar className="sticky top-0" />
       </main>
     </>
