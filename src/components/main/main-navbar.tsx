@@ -130,7 +130,7 @@ export const MainNavbar = React.forwardRef<
       </div>
       <div className="flex flex-1 items-center justify-center">
         <Input
-          className="w-full focus:ring-inset focus-visible:border-primary focus-visible:ring-0 md:max-w-lg"
+          className="w-full md:max-w-lg"
           placeholder="Where do you want to go?"
           type="search"
         />
