@@ -37,17 +37,17 @@ export function MainNavbar({ className }: { className?: string }) {
   return (
     <NavigationMenu
       className={cn(
-        "w-full max-w-full border-b-2 bg-background px-4 py-3 md:px-10",
+        "w-full max-w-full border-b bg-background px-4 py-3 shadow-sm md:px-8",
         className,
       )}
     >
-      <div className="flex w-full max-w-7xl flex-row items-center justify-between">
-        <div className="flex max-w-md items-center justify-start px-4 md:flex-1">
+      <div className="flex w-full max-w-7xl flex-row items-center justify-between gap-4">
+        <div className="flex max-w-md items-center justify-start md:flex-1">
           {/* Show hamburger menu on mobile */}
           <Sheet>
             {/* https://github.com/shadcn-ui/ui/issues/874 */}
             <SheetTrigger asChild>
-              <Button className="block md:hidden" variant="outline">
+              <Button className="md:hidden" size="icon" variant="outline">
                 <Icons.hamburger className="h-6 w-6" />
               </Button>
             </SheetTrigger>
@@ -129,14 +129,14 @@ export function MainNavbar({ className }: { className?: string }) {
             </NavigationMenuList>
           </NavigationMenuList>
         </div>
-        <div className="flex flex-1 items-center justify-center md:px-4">
+        <div className="flex flex-1 items-center justify-center">
           <Input
             className="w-full focus:ring-inset focus-visible:border-primary focus-visible:ring-0 md:max-w-lg"
             placeholder="Where do you want to go?"
             type="search"
           />
         </div>
-        <div className="flex max-w-md items-center justify-end px-4 md:flex-1">
+        <div className="flex max-w-md items-center justify-end md:flex-1">
           <NavigationMenuList className="flex-1 items-center justify-end gap-2">
             <NavigationMenuItem className="hidden md:flex">
               <Link href="/docs" legacyBehavior>
