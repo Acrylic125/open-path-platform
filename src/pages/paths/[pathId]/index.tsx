@@ -14,8 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
-
-type ResizeListener = (e: UIEvent) => void;
+import useStartingPoint from "@/hooks/useStartingPoint";
 
 function PathCard({
   id,
@@ -35,11 +34,7 @@ function PathCard({
     >
       <CardHeader className="flex-1 p-0">
         <div className="relative aspect-video h-full w-full">
-          <Image
-            src="https://images.unsplash.com/photo-1682685797660-3d847763208e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-            alt="Image"
-            fill
-          />
+          <Image src={image} alt="Image" fill />
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-2 p-4">
@@ -79,22 +74,8 @@ export default function Page() {
   // We want the height of the starting position list container to take up the remaining
   // height of the page. Thus, in order to calculate this, we take the current offset y position
   // from the total height of the page.
-  const startingPointListContainerRef = useRef<HTMLDivElement>(null);
-  const [startingPointListContainerPos, setStartingPointListContainerPos] =
-    useState<number>(0);
-  useEffect(() => {
-    const resizeStartingPointListContainer: ResizeListener = () => {
-      if (startingPointListContainerRef.current) {
-        setStartingPointListContainerPos(
-          startingPointListContainerRef.current.offsetTop,
-        );
-      }
-    };
-    window.addEventListener("resize", resizeStartingPointListContainer);
-    return () => {
-      window.removeEventListener("resize", resizeStartingPointListContainer);
-    };
-  }, [startingPointListContainerRef]);
+  const { startingPoint, startingPointRef } =
+    useStartingPoint<HTMLDivElement>();
 
   return (
     <>
@@ -105,8 +86,8 @@ export default function Page() {
         <div className="sticky top-0 z-50">
           <MainNavbar />
         </div>
-        <div className="flex w-full flex-1 flex-row">
-          <section className="flex h-full flex-1 justify-end bg-black text-white">
+        <div className="flex w-full flex-1 flex-col lg:flex-row">
+          <section className="flex h-36 justify-end bg-black text-white sm:h-40 md:h-48 lg:h-full lg:flex-1">
             <div className="relative h-full w-full max-w-7xl">
               <Image
                 src="https://images.unsplash.com/photo-1682685797660-3d847763208e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
@@ -114,14 +95,21 @@ export default function Page() {
                 className="object-cover"
                 fill
               />
-              <div className="absolute h-full w-full bg-gradient-to-r from-black/100 to-black/0 to-75%">
-                {/* <h1 className="text-4xl font-bold"></h1> */}
+              <div className="absolute flex h-full w-full flex-col justify-end bg-gradient-to-t from-black/100 to-black/0 to-75% lg:block lg:bg-gradient-to-r">
+                <div className="p-4 md:p-8 lg:hidden">
+                  <h1 className="scroll-m-20 pb-2 text-xl font-bold tracking-tight transition-colors first:mt-0 lg:text-3xl">
+                    FC6
+                  </h1>
+                  <p className="text-sm  text-muted">
+                    Singapore Polytechnic, Singapore, Singapore
+                  </p>
+                </div>
               </div>
             </div>
           </section>
           <section className="flex flex-1">
             <div className="w-full max-w-4xl border-r">
-              <header className="w-full border-b p-8">
+              <header className="hidden w-full border-b p-8 lg:block">
                 <h1 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight transition-colors first:mt-0">
                   FC6
                 </h1>
@@ -129,20 +117,20 @@ export default function Page() {
                   Singapore Polytechnic, Singapore, Singapore
                 </p>
               </header>
-              <div className="flex w-full items-center justify-between border-b px-8 py-4">
-                <h2 className="w-full scroll-m-20 text-xl font-semibold tracking-tight">
+              <div className="flex w-full items-center justify-between border-b px-4 py-4 shadow-sm md:px-8">
+                <h2 className="w-full scroll-m-20 text-base font-semibold tracking-tight lg:text-xl">
                   Select a Starting Point
                 </h2>
                 <Input placeholder="Search for a starting point" />
               </div>
               <div
                 style={{
-                  height: `calc(100vh - ${startingPointListContainerPos}px)`,
+                  height: `calc(100vh - ${startingPoint}px)`,
                 }}
-                ref={startingPointListContainerRef}
-                className="overflow-auto px-8 py-4"
+                ref={startingPointRef}
+                className="overflow-auto px-4 py-4 md:px-8"
               >
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-2 md:gap-4">
                   {paths.map((p) => (
                     <PathCard
                       key={p.id}
