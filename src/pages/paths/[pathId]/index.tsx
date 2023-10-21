@@ -1,7 +1,3 @@
-import Head from "next/head";
-import Link from "next/link";
-import { api } from "@/utils/api";
-import { Button } from "@/components/ui/button";
 import { MainNavbar } from "@/components/main/main-navbar";
 import { MainHead } from "@/components/main/main-head";
 import Image from "next/image";
@@ -13,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useEffect, useRef, useState } from "react";
 import useStartingPoint from "@/hooks/useStartingPoint";
 
 function PathCard({
