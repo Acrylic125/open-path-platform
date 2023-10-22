@@ -11,15 +11,32 @@ import {
 } from "@/components/ui/card";
 import useStartingPoint from "@/hooks/useStartingPoint";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useEffect, useRef, useState } from "react";
 import { Icons } from "@/components/ui/icons";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { useMediaQuery } from "usehooks-ts";
+import tailwindConfig from "@/utils/tailwind";
+import { forwardRef, type CSSProperties, type MutableRefObject } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
-const comments: {
+type Comment = {
   id: string;
   profilePictureUrl: string;
   username: string;
   message: string;
-}[] = [];
+};
+const comments: Comment[] = [];
+comments.push({
+  id: `id_test`,
+  profilePictureUrl: "https://github.com/shadcn.png",
+  username: `username_test`,
+  message: `rkwkfmrmef mwmrfwkerf wkkmormofekmor mofemrfmo efjeriofj reiorfjerriolfejrofiejrfoefkmekorftmeorfokewkopweoiqji edjiwid wjedwjiedji`,
+});
 for (let i = 0; i < 20; i++) {
   comments.push({
     id: `id_${i}`,
@@ -29,41 +46,117 @@ for (let i = 0; i < 20; i++) {
   });
 }
 
-function Comment({
-  profilePictureUrl,
-  username,
-  message,
-}: {
-  profilePictureUrl: string;
-  username: string;
-  message: string;
-}) {
+const CommentCard = forwardRef<
+  HTMLDivElement,
+  {
+    className?: string;
+    style?: CSSProperties;
+    profilePictureUrl: string;
+    username: string;
+    message: string;
+  }
+>(({ className, style, profilePictureUrl, username, message }, ref) => {
   return (
-    <Card tabIndex={0} className="flex flex-row gap-4">
-      <CardHeader className="flex h-full w-12">
-        <Avatar>
-          <AvatarImage
-            className="w-12 lg:w-16"
-            src={profilePictureUrl}
-            alt={username}
-          />
-          <AvatarFallback>{username}</AvatarFallback>
-        </Avatar>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-1 p-4 lg:p-4">
-        <CardTitle className="text-base lg:text-lg">{username}</CardTitle>
-        <CardDescription className="lgtext-base text-sm">
-          {message}
-        </CardDescription>
-      </CardContent>
-    </Card>
+    <div style={style} className={className} ref={ref}>
+      <div className="h-2" />
+      <Card tabIndex={0} className="flex flex-row gap-4">
+        <CardHeader className="flex h-full w-12">
+          <Avatar>
+            <AvatarImage
+              className="w-12 lg:w-16"
+              src={profilePictureUrl}
+              alt={username}
+            />
+            <AvatarFallback>{username}</AvatarFallback>
+          </Avatar>
+        </CardHeader>
+        <CardContent className="flex flex-1 flex-col gap-1 p-4 lg:p-4">
+          <CardTitle className="text-base lg:text-lg">{username}</CardTitle>
+          <CardDescription className="lgtext-base text-sm">
+            {message}
+          </CardDescription>
+        </CardContent>
+      </Card>
+      <div className="h-2" />
+    </div>
+  );
+});
+CommentCard.displayName = "CommentCard";
+
+function CommentList({
+  parentRef,
+  comments,
+}: {
+  parentRef: Readonly<MutableRefObject<HTMLDivElement | null>>;
+  comments: Comment[];
+}) {
+  const rowVirtualizer = useVirtualizer({
+    count: comments.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: (i) => 116,
+  });
+  const items = rowVirtualizer.getVirtualItems();
+
+  return (
+    <div
+      style={{
+        height: `${rowVirtualizer.getTotalSize()}px`,
+      }}
+      className="relative w-full"
+      // ref={parentRef}
+    >
+      <div
+        style={{
+          transform: `translateY(${items[0]?.start ?? 0}px)`,
+        }}
+        className="absolute left-0 top-0 w-full"
+      >
+        {items.map((virtualRow) => {
+          const comment = comments[virtualRow.index];
+          if (!comment) return null;
+
+          return (
+            <CommentCard
+              key={comment.id}
+              ref={rowVirtualizer.measureElement}
+              // style={{
+              //   // height: `${virtualRow.size}px`,
+              //   transform: `translateY(${virtualRow.start}px)`,
+              // }}
+              profilePictureUrl={comment.profilePictureUrl}
+              username={comment.username}
+              message={comment.message}
+            />
+          );
+        })}
+      </div>
+      {/* {comments.map((c) => (
+        <CommentCard
+          key={c.id}
+          className={`h-[${}]`}
+          profilePictureUrl={c.profilePictureUrl}
+          username={c.username}
+          message={c.message}
+        />
+      ))} */}
+    </div>
   );
 }
 
 export default function Page() {
-  const { startingPoint, startingPointRef } =
-    useStartingPoint<HTMLDivElement>();
+  const {
+    startingPoint: mdScreensCommentsScrollStart,
+    startingPointRef: mdScreenCommentsScroll,
+  } = useStartingPoint<HTMLDivElement>();
+  const {
+    startingPoint: smScreensCommentsScrollStart,
+    startingPointRef: smScreenCommentsScroll,
+  } = useStartingPoint<HTMLDivElement>();
   // const { ref, transformStyle } = usePanZoom();
+  const isScreenMd = useMediaQuery(
+    `(min-width: ${tailwindConfig.theme.screens.md})`,
+  );
+  console.log(isScreenMd);
 
   return (
     <>
@@ -87,7 +180,7 @@ export default function Page() {
                 // }}
               />
               <div className="absolute flex h-48 w-full flex-col bg-gradient-to-b from-black/100 to-black/0 to-75%">
-                <div className="p-8">
+                <div className="p-4 lg:p-8">
                   <h1 className="scroll-m-20 pb-2 text-xl font-bold tracking-tight transition-colors first:mt-0 lg:text-3xl">
                     FC6
                   </h1>
@@ -98,16 +191,55 @@ export default function Page() {
               </div>
               <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 transform md:hidden">
                 <div className="flex w-fit flex-row rounded-xl border border-slate-400 bg-slate-400/25 p-1 backdrop-blur-md">
-                  <Button variant="ghost" size="icon">
-                    <Icons.info className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Icons.comment className="h-4 w-4" />
-                  </Button>
-                  {/* <div className="h-full w-[1px] bg-slate-400" />
-                  <Button variant="ghost" size="icon">
-                    <Icons.info className="h-4 w-4" />
-                  </Button> */}
+                  {/* <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Icons.info className="h-4 w-4" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="bottom" className="h-3/4">
+                      <div className="relative h-full overflow-auto">
+                        <SheetHeader className="sticky top-0 z-10 h-fit border-b bg-background pb-1 shadow-sm">
+                          <SheetTitle>Info</SheetTitle>
+                        </SheetHeader>
+                        <div className="grid grid-cols-1 gap-2 py-2 md:gap-4">
+                          Hello
+                        </div>
+                      </div>
+                    </SheetContent>
+                  </Sheet> */}
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Icons.comment className="h-4 w-4" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="bottom" className="h-3/4">
+                      {/* <div className="relative h-full overflow-auto"> */}
+                      <div className="h-full">
+                        {/* <SheetHeader className="sticky top-0 z-10 h-fit border-b bg-background pb-1 shadow-sm"> */}
+                        <SheetHeader className="border-b pb-2 shadow-sm">
+                          <SheetTitle>Comments</SheetTitle>
+                        </SheetHeader>
+                        <div
+                          style={{
+                            height: `calc(100vh - ${smScreensCommentsScrollStart}px)`,
+                            contain: "strict",
+                          }}
+                          ref={smScreenCommentsScroll}
+                          className="overflow-auto"
+                        >
+                          <CommentList
+                            parentRef={smScreenCommentsScroll}
+                            comments={comments}
+                          />
+                        </div>
+                        {/* <div className="grid grid-cols-1 gap-2 py-2 md:gap-4">
+                          <CommentList comments={comments} />
+                        </div> */}
+                      </div>
+                    </SheetContent>
+                  </Sheet>
                 </div>
               </div>
             </div>
@@ -164,21 +296,16 @@ export default function Page() {
               </div>
               <div
                 style={{
-                  height: `calc(100vh - ${startingPoint}px)`,
+                  height: `calc(100vh - ${mdScreensCommentsScrollStart}px)`,
+                  contain: "strict",
                 }}
-                ref={startingPointRef}
+                ref={mdScreenCommentsScroll}
                 className="overflow-auto px-4 py-4 xl:px-8"
               >
-                <div className="grid grid-cols-1 gap-2 md:gap-4">
-                  {comments.map((c) => (
-                    <Comment
-                      key={c.id}
-                      profilePictureUrl={c.profilePictureUrl}
-                      username={c.username}
-                      message={c.message}
-                    />
-                  ))}
-                </div>
+                <CommentList
+                  parentRef={mdScreenCommentsScroll}
+                  comments={comments}
+                />
               </div>
             </div>
           </section>
