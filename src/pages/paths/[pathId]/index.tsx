@@ -77,7 +77,7 @@ export default function Page() {
       <MainHead />
 
       {/* https://stackoverflow.com/questions/46655386/when-css-position-sticky-stops-sticking */}
-      <main className="relative flex h-screen flex-col overflow-auto">
+      <main className="h-screen-svh relative flex flex-col overflow-auto">
         <div className="sticky top-0 z-50">
           <MainNavbar />
         </div>

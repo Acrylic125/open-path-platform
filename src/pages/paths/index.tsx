@@ -75,7 +75,7 @@ export default function Home() {
       <MainHead title="Explore Paths" />
 
       {/* https://stackoverflow.com/questions/46655386/when-css-position-sticky-stops-sticking */}
-      <main className="relative h-screen overflow-auto">
+      <main className="h-screen-svh relative overflow-auto">
         <MainNavbar className="sticky top-0 z-50" />
         <div className="flex w-full flex-col items-center">
           <section className="flex w-full max-w-7xl flex-col gap-3 px-4 py-4 md:gap-6 md:px-8 md:py-8">
