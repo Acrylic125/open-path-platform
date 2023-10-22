@@ -2,15 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MainNavbar } from "@/components/main/main-navbar";
 import { MainHead } from "@/components/main/main-head";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import useStartingPoint from "@/hooks/useStartingPoint";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/ui/icons";
 import {
   Sheet,
@@ -21,20 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { useMediaQuery } from "usehooks-ts";
 import tailwindConfig from "@/utils/tailwind";
-import {
-  forwardRef,
-  type CSSProperties,
-  useCallback,
-  type RefCallback,
-  useMemo,
-} from "react";
-import {
-  List,
-  AutoSizer,
-  CellMeasurerCache,
-  CellMeasurer,
-} from "react-virtualized";
-import { type MeasuredCellParent } from "react-virtualized/dist/es/CellMeasurer";
+import { AutoSizer } from "react-virtualized";
 import dynamic from "next/dynamic";
 import CommentList from "@/components/step-page/comment-card-list";
 
@@ -130,7 +109,7 @@ export default function Page() {
 
                           <div
                             style={{
-                              height: `calc(100vh - ${smScreensCommentsScrollStart}px)`,
+                              height: `calc(100svh - ${smScreensCommentsScrollStart}px)`,
                             }}
                             className="px-4"
                             ref={smScreenCommentsScroll}
@@ -207,7 +186,7 @@ export default function Page() {
               {/* Lazy load in if screen size is large enough */}
               <div
                 style={{
-                  height: `calc(100vh - ${mdScreensCommentsScrollStart}px)`,
+                  height: `calc(100svh - ${mdScreensCommentsScrollStart}px)`,
                 }}
                 className="px-4 xl:px-8"
                 ref={mdScreenCommentsScroll}
