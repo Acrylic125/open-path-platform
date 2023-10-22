@@ -21,8 +21,20 @@ import {
 } from "@/components/ui/sheet";
 import { useMediaQuery } from "usehooks-ts";
 import tailwindConfig from "@/utils/tailwind";
-import { forwardRef, type CSSProperties, type MutableRefObject } from "react";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import {
+  forwardRef,
+  type CSSProperties,
+  useCallback,
+  type RefCallback,
+  useMemo,
+} from "react";
+import {
+  List,
+  AutoSizer,
+  CellMeasurerCache,
+  CellMeasurer,
+} from "react-virtualized";
+import { type MeasuredCellParent } from "react-virtualized/dist/es/CellMeasurer";
 
 type Comment = {
   id: string;
@@ -58,7 +70,6 @@ const CommentCard = forwardRef<
 >(({ className, style, profilePictureUrl, username, message }, ref) => {
   return (
     <div style={style} className={className} ref={ref}>
-      <div className="h-2" />
       <Card tabIndex={0} className="flex flex-row gap-4">
         <CardHeader className="flex h-full w-12">
           <Avatar>
@@ -77,69 +88,75 @@ const CommentCard = forwardRef<
           </CardDescription>
         </CardContent>
       </Card>
-      <div className="h-2" />
     </div>
   );
 });
 CommentCard.displayName = "CommentCard";
 
 function CommentList({
-  parentRef,
+  width,
+  height,
   comments,
 }: {
-  parentRef: Readonly<MutableRefObject<HTMLDivElement | null>>;
+  width: number;
+  height: number;
   comments: Comment[];
 }) {
-  const rowVirtualizer = useVirtualizer({
-    count: comments.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: (i) => 116,
-  });
-  const items = rowVirtualizer.getVirtualItems();
+  const commentListCache = useMemo(() => {
+    return new CellMeasurerCache({
+      fixedWidth: true,
+    });
+  }, []);
+  const renderRow = useCallback(
+    ({
+      index,
+      key,
+      parent,
+      style,
+    }: {
+      index: number;
+      key: string;
+      parent: MeasuredCellParent;
+      style: React.CSSProperties;
+    }) => {
+      return (
+        <CellMeasurer
+          key={key}
+          cache={commentListCache}
+          parent={parent}
+          columnIndex={0}
+          rowIndex={index}
+        >
+          {({ registerChild }) => {
+            const comment = comments[index];
+            if (!comment) return null;
+            return (
+              <CommentCard
+                key={comment.id}
+                style={style}
+                className="py-2"
+                ref={registerChild as RefCallback<HTMLDivElement>}
+                profilePictureUrl={comment.profilePictureUrl}
+                username={comment.username}
+                message={comment.message}
+              />
+            );
+          }}
+        </CellMeasurer>
+      );
+    },
+    [comments, commentListCache],
+  );
 
   return (
-    <div
-      style={{
-        height: `${rowVirtualizer.getTotalSize()}px`,
-      }}
-      className="relative w-full"
-      // ref={parentRef}
-    >
-      <div
-        style={{
-          transform: `translateY(${items[0]?.start ?? 0}px)`,
-        }}
-        className="absolute left-0 top-0 w-full"
-      >
-        {items.map((virtualRow) => {
-          const comment = comments[virtualRow.index];
-          if (!comment) return null;
-
-          return (
-            <CommentCard
-              key={comment.id}
-              ref={rowVirtualizer.measureElement}
-              // style={{
-              //   // height: `${virtualRow.size}px`,
-              //   transform: `translateY(${virtualRow.start}px)`,
-              // }}
-              profilePictureUrl={comment.profilePictureUrl}
-              username={comment.username}
-              message={comment.message}
-            />
-          );
-        })}
-      </div>
-      {/* {comments.map((c) => (
-        <CommentCard
-          key={c.id}
-          className={`h-[${}]`}
-          profilePictureUrl={c.profilePictureUrl}
-          username={c.username}
-          message={c.message}
-        />
-      ))} */}
-    </div>
+    <List
+      width={width}
+      height={height}
+      rowHeight={commentListCache.rowHeight}
+      rowRenderer={renderRow}
+      rowCount={comments.length}
+      overscanRowCount={3}
+    />
   );
 }
 
@@ -191,54 +208,42 @@ export default function Page() {
               </div>
               <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 transform md:hidden">
                 <div className="flex w-fit flex-row rounded-xl border border-slate-400 bg-slate-400/25 p-1 backdrop-blur-md">
-                  {/* <Sheet>
-                    <SheetTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <Icons.info className="h-4 w-4" />
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="bottom" className="h-3/4">
-                      <div className="relative h-full overflow-auto">
-                        <SheetHeader className="sticky top-0 z-10 h-fit border-b bg-background pb-1 shadow-sm">
-                          <SheetTitle>Info</SheetTitle>
-                        </SheetHeader>
-                        <div className="grid grid-cols-1 gap-2 py-2 md:gap-4">
-                          Hello
-                        </div>
-                      </div>
-                    </SheetContent>
-                  </Sheet> */}
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <Icons.comment className="h-4 w-4" />
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="bottom" className="h-3/4">
-                      {/* <div className="relative h-full overflow-auto"> */}
-                      <div className="h-full">
-                        {/* <SheetHeader className="sticky top-0 z-10 h-fit border-b bg-background pb-1 shadow-sm"> */}
-                        <SheetHeader className="border-b pb-2 shadow-sm">
-                          <SheetTitle>Comments</SheetTitle>
-                        </SheetHeader>
-                        <div
-                          style={{
-                            height: `calc(100vh - ${smScreensCommentsScrollStart}px)`,
-                            contain: "strict",
-                          }}
-                          ref={smScreenCommentsScroll}
-                          className="overflow-auto"
-                        >
-                          <CommentList
-                            parentRef={smScreenCommentsScroll}
-                            comments={comments}
-                          />
+                    {/* Lazy load in if screen size is small enough */}
+                    {!isScreenMd && (
+                      <SheetContent side="bottom" className="h-3/4 p-0">
+                        {/* <div className="relative h-full overflow-auto"> */}
+                        <div className="flex h-full flex-col">
+                          {/* <SheetHeader className="sticky top-0 z-10 h-fit border-b bg-background pb-1 shadow-sm"> */}
+                          <SheetHeader className="border-b px-4 py-2 shadow-sm">
+                            <SheetTitle>Comments</SheetTitle>
+                          </SheetHeader>
+
+                          <div
+                            style={{
+                              height: `calc(100vh - ${smScreensCommentsScrollStart}px)`,
+                            }}
+                            className="px-4"
+                            ref={smScreenCommentsScroll}
+                          >
+                            <AutoSizer>
+                              {({ width, height }) => (
+                                <CommentList
+                                  height={height}
+                                  width={width}
+                                  comments={comments}
+                                />
+                              )}
+                            </AutoSizer>
+                          </div>
                         </div>
-                        {/* <div className="grid grid-cols-1 gap-2 py-2 md:gap-4">
-                          <CommentList comments={comments} />
-                        </div> */}
-                      </div>
-                    </SheetContent>
+                      </SheetContent>
+                    )}
                   </Sheet>
                 </div>
               </div>
@@ -294,19 +299,27 @@ export default function Page() {
                   Comments
                 </h2>
               </div>
-              <div
-                style={{
-                  height: `calc(100vh - ${mdScreensCommentsScrollStart}px)`,
-                  contain: "strict",
-                }}
-                ref={mdScreenCommentsScroll}
-                className="overflow-auto px-4 py-4 xl:px-8"
-              >
-                <CommentList
-                  parentRef={mdScreenCommentsScroll}
-                  comments={comments}
-                />
-              </div>
+
+              {/* Lazy load in if screen size is large enough */}
+              {isScreenMd && (
+                <div
+                  style={{
+                    height: `calc(100vh - ${mdScreensCommentsScrollStart}px)`,
+                  }}
+                  className="px-4 xl:px-8"
+                  ref={mdScreenCommentsScroll}
+                >
+                  <AutoSizer>
+                    {({ width, height }) => (
+                      <CommentList
+                        height={height}
+                        width={width}
+                        comments={comments}
+                      />
+                    )}
+                  </AutoSizer>
+                </div>
+              )}
             </div>
           </section>
         </div>
