@@ -35,6 +35,8 @@ import {
   CellMeasurer,
 } from "react-virtualized";
 import { type MeasuredCellParent } from "react-virtualized/dist/es/CellMeasurer";
+import dynamic from "next/dynamic";
+import CommentList from "@/components/step-page/comment-card-list";
 
 type Comment = {
   id: string;
@@ -58,107 +60,10 @@ for (let i = 0; i < 20; i++) {
   });
 }
 
-const CommentCard = forwardRef<
-  HTMLDivElement,
-  {
-    className?: string;
-    style?: CSSProperties;
-    profilePictureUrl: string;
-    username: string;
-    message: string;
-  }
->(({ className, style, profilePictureUrl, username, message }, ref) => {
-  return (
-    <div style={style} className={className} ref={ref}>
-      <Card tabIndex={0} className="flex flex-row gap-4">
-        <CardHeader className="flex h-full w-12">
-          <Avatar>
-            <AvatarImage
-              className="w-12 lg:w-16"
-              src={profilePictureUrl}
-              alt={username}
-            />
-            <AvatarFallback>{username}</AvatarFallback>
-          </Avatar>
-        </CardHeader>
-        <CardContent className="flex flex-1 flex-col gap-1 p-4 lg:p-4">
-          <CardTitle className="text-base lg:text-lg">{username}</CardTitle>
-          <CardDescription className="lgtext-base text-sm">
-            {message}
-          </CardDescription>
-        </CardContent>
-      </Card>
-    </div>
-  );
-});
-CommentCard.displayName = "CommentCard";
-
-function CommentList({
-  width,
-  height,
-  comments,
-}: {
-  width: number;
-  height: number;
-  comments: Comment[];
-}) {
-  const commentListCache = useMemo(() => {
-    return new CellMeasurerCache({
-      fixedWidth: true,
-    });
-  }, []);
-  const renderRow = useCallback(
-    ({
-      index,
-      key,
-      parent,
-      style,
-    }: {
-      index: number;
-      key: string;
-      parent: MeasuredCellParent;
-      style: React.CSSProperties;
-    }) => {
-      return (
-        <CellMeasurer
-          key={key}
-          cache={commentListCache}
-          parent={parent}
-          columnIndex={0}
-          rowIndex={index}
-        >
-          {({ registerChild }) => {
-            const comment = comments[index];
-            if (!comment) return null;
-            return (
-              <CommentCard
-                key={comment.id}
-                style={style}
-                className="py-2"
-                ref={registerChild as RefCallback<HTMLDivElement>}
-                profilePictureUrl={comment.profilePictureUrl}
-                username={comment.username}
-                message={comment.message}
-              />
-            );
-          }}
-        </CellMeasurer>
-      );
-    },
-    [comments, commentListCache],
-  );
-
-  return (
-    <List
-      width={width}
-      height={height}
-      rowHeight={commentListCache.rowHeight}
-      rowRenderer={renderRow}
-      rowCount={comments.length}
-      overscanRowCount={3}
-    />
-  );
-}
+const LazyCommentListAutoSizer = dynamic(
+  () => import("@/components/step-page/comment-list-auto-sizer"),
+  {},
+);
 
 export default function Page() {
   const {
@@ -173,7 +78,6 @@ export default function Page() {
   const isScreenMd = useMediaQuery(
     `(min-width: ${tailwindConfig.theme.screens.md})`,
   );
-  console.log(isScreenMd);
 
   return (
     <>
@@ -301,25 +205,15 @@ export default function Page() {
               </div>
 
               {/* Lazy load in if screen size is large enough */}
-              {isScreenMd && (
-                <div
-                  style={{
-                    height: `calc(100vh - ${mdScreensCommentsScrollStart}px)`,
-                  }}
-                  className="px-4 xl:px-8"
-                  ref={mdScreenCommentsScroll}
-                >
-                  <AutoSizer>
-                    {({ width, height }) => (
-                      <CommentList
-                        height={height}
-                        width={width}
-                        comments={comments}
-                      />
-                    )}
-                  </AutoSizer>
-                </div>
-              )}
+              <div
+                style={{
+                  height: `calc(100vh - ${mdScreensCommentsScrollStart}px)`,
+                }}
+                className="px-4 xl:px-8"
+                ref={mdScreenCommentsScroll}
+              >
+                {isScreenMd && <LazyCommentListAutoSizer comments={comments} />}
+              </div>
             </div>
           </section>
         </div>
