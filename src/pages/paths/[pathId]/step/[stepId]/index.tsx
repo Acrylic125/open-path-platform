@@ -62,7 +62,7 @@ export default function Page() {
     <>
       <MainHead />
 
-      <main className="relative flex h-screen flex-col overflow-auto">
+      <main className="h-screen-svh relative flex flex-col overflow-auto">
         <div className="sticky top-0 z-50">
           <MainNavbar />
         </div>
