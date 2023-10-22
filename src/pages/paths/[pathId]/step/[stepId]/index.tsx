@@ -130,7 +130,7 @@ export default function Page() {
 
                           <div
                             style={{
-                              height: `calc(100vh - ${smScreensCommentsScrollStart}px)`,
+                              height: `calc(100svh - ${smScreensCommentsScrollStart}px)`,
                             }}
                             className="px-4"
                             ref={smScreenCommentsScroll}
@@ -207,7 +207,7 @@ export default function Page() {
               {/* Lazy load in if screen size is large enough */}
               <div
                 style={{
-                  height: `calc(100vh - ${mdScreensCommentsScrollStart}px)`,
+                  height: `calc(100svh - ${mdScreensCommentsScrollStart}px)`,
                 }}
                 className="px-4 xl:px-8"
                 ref={mdScreenCommentsScroll}
