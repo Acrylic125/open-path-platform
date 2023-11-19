@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --navbar-height: 64px;
+    --safe-content-height: calc(100svh - var(--navbar-height));
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
