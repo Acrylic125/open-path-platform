@@ -21,9 +21,7 @@ for (let i = 0; i < 20; i++) {
 export default function Page() {
   return (
     <div className="flex flex-1 flex-col items-center">
-      <div
-        className="relative h-[var(--safe-content-height)] w-full max-w-7xl overflow-auto border-l border-r"
-      >
+      <div className="relative h-[var(--safe-content-height)] w-full max-w-7xl overflow-auto border-l border-r">
         <div className="w-full transition-all duration-0 ease-in-out">
           <section className="flex h-36 justify-end bg-black text-white sm:h-40 md:h-48">
             <div className="relative h-full w-full max-w-7xl">
@@ -32,6 +30,7 @@ export default function Page() {
                 alt="Image"
                 className="object-cover"
                 fill
+                loading="lazy"
               />
               <div className="absolute flex h-full w-full flex-col justify-end bg-gradient-to-t from-black/100 to-black/0 to-75%">
                 <div className="p-4 md:p-6">

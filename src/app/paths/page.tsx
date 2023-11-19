@@ -23,11 +23,19 @@ export default function Home() {
   return (
     <div className="flex w-full flex-1 flex-col items-center">
       <section className="relative flex h-[var(--safe-content-height)] w-full max-w-7xl flex-col overflow-auto">
-        <header className="sticky top-0 z-10 w-full border-b border-t bg-background px-4 py-2 md:gap-6 md:px-6 md:py-4">
-          <h1 className="w-full text-sm font-semibold md:text-base lg:text-lg">
-            Paths
+        {/* <header className="text-ce flex w-full flex-col items-center gap-1 p-4 md:p-8 lg:p-12">
+          <h1 className="w-full text-center text-lg font-bold md:text-xl lg:text-2xl">
+            Let{"'"}s get started!
           </h1>
-        </header>
+          <h1 className="w-full text-center text-sm md:text-base lg:text-lg">
+            Choose how you would like to get to your destination.
+          </h1>
+        </header> */}
+        <div className="sticky top-0 z-10 w-full border-b border-t bg-background px-4 py-2 md:gap-6 md:px-6 md:py-4">
+          <h2 className="w-full text-sm font-semibold md:text-base lg:text-lg">
+            Go to
+          </h2>
+        </div>
         <div className="grid grid-cols-1 gap-2 px-4 py-2 pb-16 md:grid-cols-2 md:gap-4 md:px-6 md:py-4 lg:grid-cols-3 xl:grid-cols-4">
           {paths.map((p) => (
             <PathCard
@@ -36,7 +44,7 @@ export default function Home() {
               image={p.image}
               location={p.location}
               subLocation={p.subLocation}
-              href={`/paths/${p.id}`}
+              href={`/destinations/${p.id}`}
             />
           ))}
         </div>
