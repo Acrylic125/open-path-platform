@@ -1,3 +1,4 @@
+import { MainNavbar } from "@/components/main/main-navbar";
 import PathCard from "@/components/paths/path-card";
 import { Button } from "@/components/ui/button";
 
@@ -21,8 +22,8 @@ export default function Home() {
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   return (
-    <div className="flex w-full flex-1 flex-col items-center">
-      <section className="relative flex h-[var(--safe-content-height)] w-full max-w-7xl flex-col overflow-auto">
+    <div className="flex w-full flex-col items-center">
+      <section className="relative flex h-[var(--safe-content-height)] w-full max-w-7xl flex-col">
         {/* <header className="text-ce flex w-full flex-col items-center gap-1 p-4 md:p-8 lg:p-12">
           <h1 className="w-full text-center text-lg font-bold md:text-xl lg:text-2xl">
             Let{"'"}s get started!

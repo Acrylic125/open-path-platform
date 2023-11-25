@@ -22,6 +22,40 @@ export const Icons = {
       />
     </svg>
   ),
+  chevronLeft: ({ className, ...otherProps }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn("lucide lucide-chevron-left", className)}
+      {...otherProps}
+    >
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+  ),
+  chevronRight: ({ className, ...otherProps }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn("lucide lucide-chevron-right", className)}
+      {...otherProps}
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  ),
   chevronDown: ({ className, ...otherProps }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +126,25 @@ export const Icons = {
       {...otherProps}
     >
       <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" />
+    </svg>
+  ),
+  galleryVertical: ({ className, ...otherProps }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn("lucide lucide-gallery-vertical", className)}
+      {...otherProps}
+    >
+      <path d="M3 2h18" />
+      <rect width="18" height="12" x="3" y="6" rx="2" />
+      <path d="M3 22h18" />
     </svg>
   ),
   check: ({ className, ...otherProps }: IconProps) => {

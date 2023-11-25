@@ -57,10 +57,6 @@ export default async function Page({
               className="cursor-move select-none object-contain"
               fill
               loading="lazy"
-              // ref={ref}
-              // style={{
-              //   transform: transformStyle,
-              // }}
             />
             <div className="absolute flex h-48 w-full flex-col bg-gradient-to-b from-black/100 to-black/0 to-75%">
               <div className="p-4 lg:p-8">
@@ -72,66 +68,78 @@ export default async function Page({
                 </p>
               </div>
             </div>
-            {/* <div className="absolute bottom-4 flex w-fit flex-row rounded-xl border border-slate-400 bg-slate-400/25 p-1 text-slate-50 backdrop-blur-md">
-              <Button variant="ghost" size="icon">
-                <Icons.comment className="h-4 w-4" />
-              </Button>
-            </div> */}
-          </div>
-          <div className="bottom-0 w-full border-t bg-background">
-            <div className="flex w-full flex-row items-center justify-between p-4">
-              {prevStepId ? (
-                <Link href={`/paths/${pathId}/steps/${prevStepId}`} passHref>
-                  <Button variant="outline">Back</Button>
-                </Link>
-              ) : (
-                <Button variant="outline" disabled>
-                  Back
+            <div className="absolute bottom-8 flex w-fit flex-row items-center gap-1 rounded-xl border border-slate-400 bg-slate-400/25 p-1 text-slate-50 backdrop-blur-md">
+              <div className="flex flex-row">
+                {prevStepId ? (
+                  <Link href={`/paths/${pathId}/steps/${prevStepId}`} passHref>
+                    <Button variant="ghost" size="icon">
+                      <Icons.chevronLeft />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button disabled variant="ghost" size="icon">
+                    <Icons.chevronLeft />
+                  </Button>
+                )}
+              </div>
+              <div className="h-8 w-[1px] bg-slate-400" />
+              <div className="flex flex-row">
+                <Button variant="ghost" size="icon">
+                  <Icons.galleryVertical className="h-4 w-4" />
                 </Button>
-              )}
-              <p>
-                {stepNumber} / {totalSteps}
-              </p>
-              {nextStepId ? (
-                <Link href={`/paths/${pathId}/steps/${nextStepId}`} passHref>
-                  <Button variant="default">Next</Button>
-                </Link>
-              ) : (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="default">Complete</Button>
-                  </DialogTrigger>
-                  <DialogContent className="py-8 lg:py-12">
-                    <DialogHeader>
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="rounded-md border border-green-300 bg-green-100 p-4 text-green-600">
-                          <Icons.check className="" />
+                {/* <Button variant="ghost" size="icon">
+                  <Icons.comment className="h-4 w-4" />
+                </Button> */}
+              </div>
+              <div className="h-8 w-[1px] bg-slate-400" />
+              <div className="flex flex-row">
+                {nextStepId ? (
+                  <Link href={`/paths/${pathId}/steps/${nextStepId}`} passHref>
+                    <Button variant="ghost" size="icon">
+                      <Icons.chevronRight />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Icons.chevronRight />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="py-8 lg:py-12">
+                      <DialogHeader>
+                        <div className="flex flex-col items-center gap-4">
+                          <div className="rounded-md border border-green-300 bg-green-100 p-4 text-green-600">
+                            <Icons.check className="" />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <DialogTitle className="text-center text-lg md:text-xl lg:text-2xl">
+                              You are done!
+                            </DialogTitle>
+                            <DialogDescription className="text-center text-base md:text-lg">
+                              Well done! You have completed this path.
+                            </DialogDescription>
+                          </div>
                         </div>
-                        <div className="flex flex-col gap-1">
-                          <DialogTitle className="text-center text-lg md:text-xl lg:text-2xl">
-                            You are done!
-                          </DialogTitle>
-                          <DialogDescription className="text-center text-base md:text-lg">
-                            Well done! You have completed this path.
-                          </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <div className="flex w-full justify-center gap-2">
+                          <DialogClose asChild>
+                            <Button type="button" variant="secondary">
+                              Cancel
+                            </Button>
+                          </DialogClose>
+                          <Link href="/" passHref>
+                            <Button type="button" variant="default">
+                              Back to Home
+                            </Button>
+                          </Link>
                         </div>
-                      </div>
-                    </DialogHeader>
-                    <DialogFooter>
-                      <div className="flex w-full justify-center gap-2">
-                        <DialogClose asChild>
-                          <Button type="button" variant="secondary">
-                            Cancel
-                          </Button>
-                        </DialogClose>
-                        <Button type="button" variant="default">
-                          Back to Home
-                        </Button>
-                      </div>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              )}
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </div>
             </div>
           </div>
         </div>
